@@ -7,7 +7,7 @@ class PasswordLoginRequest(BaseModel):
     long_lived: bool = Field(alias="longLived", default=True)
 
 
-class JWTResponse(BaseModel):
+class Jwt(BaseModel):
     access_token: str = Field(alias="accessToken")
     refresh_token: str = Field(alias="refreshToken")
     long_lived: str = Field(alias="longLived")
