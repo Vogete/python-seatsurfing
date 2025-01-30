@@ -15,6 +15,10 @@ class Bookings(SeatsurfingHttpClient):
     Documentation: https://seatsurfing.io/docs/rest-api#bookings
     """
 
+    def _convert_datetime_to_str(self, time: datetime) -> str:
+        """Helper function to return the correct format of a datetime."""
+        return time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
     def get_bookings(self):
         """Unfinished"""
         r = self._get("/booking/")
@@ -35,15 +39,17 @@ class Bookings(SeatsurfingHttpClient):
         """
         from_date_str = from_date.strftime("%Y-%m-%dT%H:%M:%SZ")
         to_date_str = to_date.strftime("%Y-%m-%dT%H:%M:%SZ")
-        data = {"start": from_date_str, "end": to_date_str}
+        data = {
+            "start": self._convert_datetime_to_str(from_date_str),
+            "end": self._convert_datetime_to_str(to_date_str),
+        }
         r = self._post("/booking/filter/", data=data)
         return [Booking(**x) for x in r.json()]
 
     def create_booking(
         self,
-        booking_id: str,
-        enter: str,
-        leave: str,
+        enter: datetime,
+        leave: datetime,
         space_id: str,
         user_email: str = "",
     ):
@@ -51,17 +57,30 @@ class Bookings(SeatsurfingHttpClient):
         `user_email` should only be filled out if you are an admin, and can create bookings on behalf of others.
         """
         data = BookingCreateOrUpdateDTO(
-            enter=enter, leave=leave, spaceId=space_id, userEmail=user_email
+            enter=self._convert_datetime_to_str(enter),
+            leave=self._convert_datetime_to_str(leave),
+            spaceId=space_id,
+            userEmail=user_email,
         )
-        self._post(f"/booking/{booking_id}", data=data)
+        # FIXME: not working
+        self._post("/booking/", data=data.model_dump())
 
     def update_booking(
-        self, booking_id: str, enter: str, leave: str, space_id: str, user_email: str
+        self,
+        booking_id: str,
+        enter: datetime,
+        leave: datetime,
+        space_id: str,
+        user_email: str,
     ):
         data = BookingCreateOrUpdateDTO(
-            enter=enter, leave=leave, spaceId=space_id, userEmail=user_email
+            enter=self._convert_datetime_to_str(enter),
+            leave=self._convert_datetime_to_str(leave),
+            spaceId=space_id,
+            userEmail=user_email,
         )
-        self._put(f"/booking/{booking_id}", data=data)
+        # FIXME: not working
+        self._put(f"/booking/{booking_id}", data=data.model_dump())
 
     def delete_booking(self, booking_id: str):
         self._delete(f"/booking/{booking_id}")
