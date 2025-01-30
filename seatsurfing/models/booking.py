@@ -35,3 +35,10 @@ class Booking(BaseModel):
     space_id: str = Field(alias="spaceId")
     enter: str
     leave: str
+
+
+class BookingCreateOrUpdateDTO(BaseModel):
+    enter: str
+    leave: str
+    user_email: str = Field(alias="userEmail")
+    space_id: str = Field(alias="spaceId")

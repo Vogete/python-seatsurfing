@@ -1,8 +1,8 @@
-from seatsurfing.booking import Booking
+from seatsurfing.booking import Bookings
 
 
 class Client:
     """Client to interact with Seatsurfing."""
 
     def __init__(self, base_url: str, username: str, password: str):
-        self.booking = Booking(base_url, username=username, password=password)
+        self.booking = Bookings(base_url, username=username, password=password)

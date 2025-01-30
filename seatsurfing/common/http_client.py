@@ -35,43 +35,43 @@ class SeatsurfingHttpClient:
 
     def _get(
         self, path: str, *, params: dict = None, headers: dict = None
-    ) -> dict | list[dict] | None:
+    ) -> httpx.Response | None:
         if not self._is_logged_in():
             return None
 
         r = self.__client.get(path, headers=headers, params=params)
         r.raise_for_status()
-        return r.json()
+        return r
 
     def _post(
         self, path: str, *, data: dict = None, params: dict = None, headers: dict = None
-    ) -> dict | list[dict] | None:
+    ) -> httpx.Response | None:
         if not self._is_logged_in():
             return None
 
         r = self.__client.post(path, json=data, headers=headers, params=params)
         r.raise_for_status()
-        return r.json()
+        return r
 
     def _put(
         self, path: str, *, data: dict = None, params: dict = None, headers: dict = None
-    ) -> dict | list[dict] | None:
+    ) -> httpx.Response | None:
         if not self._is_logged_in():
             return None
 
         r = self.__client.put(path, json=data, headers=headers, params=params)
         r.raise_for_status()
-        return r.json()
+        return r
 
     def _delete(
         self, path: str, *, params: dict = None, headers: dict = None
-    ) -> dict | list[dict] | None:
+    ) -> httpx.Response | None:
         if not self._is_logged_in():
             return None
 
         r = self.__client.delete(path, headers=headers, params=params)
         r.raise_for_status()
-        return r.json()
+        return r
 
     def _password_login(self, username: str, password: str) -> Jwt:
         """Authenticate using username and password, and update class http client with new bearer token."""
