@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -40,5 +41,5 @@ class Booking(BaseModel):
 class BookingCreateOrUpdateDTO(BaseModel):
     enter: str
     leave: str
-    user_email: str = Field(alias="userEmail")
-    space_id: str = Field(alias="spaceId")
+    space_id: str = Field(serialization_alias="spaceId")
+    user_email: Optional[str] = Field(serialization_alias="userEmail", default="")

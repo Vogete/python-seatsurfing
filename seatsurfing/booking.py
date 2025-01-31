@@ -37,11 +37,9 @@ class Bookings(SeatsurfingHttpClient):
 
         Currently supports time period.
         """
-        from_date_str = from_date.strftime("%Y-%m-%dT%H:%M:%SZ")
-        to_date_str = to_date.strftime("%Y-%m-%dT%H:%M:%SZ")
         data = {
-            "start": self._convert_datetime_to_str(from_date_str),
-            "end": self._convert_datetime_to_str(to_date_str),
+            "start": self._convert_datetime_to_str(from_date),
+            "end": self._convert_datetime_to_str(to_date),
         }
         r = self._post("/booking/filter/", data=data)
         return [Booking(**x) for x in r.json()]
@@ -59,11 +57,10 @@ class Bookings(SeatsurfingHttpClient):
         data = BookingCreateOrUpdateDTO(
             enter=self._convert_datetime_to_str(enter),
             leave=self._convert_datetime_to_str(leave),
-            spaceId=space_id,
-            userEmail=user_email,
+            space_id=space_id,
+            user_email=user_email,
         )
-        # FIXME: not working
-        self._post("/booking/", data=data.model_dump())
+        self._post("/booking/", data=data.model_dump(by_alias=True))
 
     def update_booking(
         self,
@@ -76,11 +73,10 @@ class Bookings(SeatsurfingHttpClient):
         data = BookingCreateOrUpdateDTO(
             enter=self._convert_datetime_to_str(enter),
             leave=self._convert_datetime_to_str(leave),
-            spaceId=space_id,
-            userEmail=user_email,
+            space_id=space_id,
+            user_email=user_email,
         )
-        # FIXME: not working
-        self._put(f"/booking/{booking_id}", data=data.model_dump())
+        self._put(f"/booking/{booking_id}", data=data.model_dump(by_alias=True))
 
     def delete_booking(self, booking_id: str):
         self._delete(f"/booking/{booking_id}")
