@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 import logging
 from seatsurfing.common.http_client import SeatsurfingHttpClient
 from seatsurfing.models.booking import Booking, BookingCreateOrUpdateDTO
@@ -12,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 class Bookings(SeatsurfingHttpClient):
     """
+    Booking related methods.
+
     Documentation: https://seatsurfing.io/docs/rest-api#bookings
     """
 
@@ -20,12 +21,12 @@ class Bookings(SeatsurfingHttpClient):
         return time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def get_bookings(self):
-        """Unfinished"""
+        """Get all bookings as `list[Booking]`"""
         r = self._get("/booking/")
         return [Booking(**x) for x in r.json()]
 
     def get_booking(self, booking_id: str):
-        """Unfinished"""
+        """Get a single booking by ID. Returns a `Booking` object."""
         r = self._get(f"/booking/{booking_id}")
         return Booking(**(r.json()))
 
@@ -33,9 +34,7 @@ class Bookings(SeatsurfingHttpClient):
         self, from_date: datetime, to_date: datetime
     ) -> list[Booking]:
         """
-        Get filtered org bookings.
-
-        Currently supports time period.
+        Get bookings using filters. Currently supports time period.
         """
         data = {
             "start": self._convert_datetime_to_str(from_date),
@@ -52,6 +51,8 @@ class Bookings(SeatsurfingHttpClient):
         user_email: str = "",
     ):
         """
+        Create a new booking. If `user_email` is empty, it will create a booking for your logged in user.
+
         `user_email` should only be filled out if you are an admin, and can create bookings on behalf of others.
         """
         data = BookingCreateOrUpdateDTO(
@@ -70,6 +71,7 @@ class Bookings(SeatsurfingHttpClient):
         space_id: str,
         user_email: str,
     ):
+        """Update an existing booking."""
         data = BookingCreateOrUpdateDTO(
             enter=self._convert_datetime_to_str(enter),
             leave=self._convert_datetime_to_str(leave),
@@ -79,4 +81,5 @@ class Bookings(SeatsurfingHttpClient):
         self._put(f"/booking/{booking_id}", data=data.model_dump(by_alias=True))
 
     def delete_booking(self, booking_id: str):
+        """Delete a booking using an ID."""
         self._delete(f"/booking/{booking_id}")

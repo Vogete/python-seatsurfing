@@ -3,6 +3,8 @@ from pydantic import BaseModel, Field
 
 
 class Location(BaseModel):
+    """Location object holding all the information about a location (eg. office)"""
+
     id: str
     organizationId: str
     map_width: int = Field(alias="mapWidth")
@@ -16,6 +18,8 @@ class Location(BaseModel):
 
 
 class Space(BaseModel):
+    """Space object that corresponds to a single seat."""
+
     id: str
     available: bool
     location_id: str = Field(alias="locationId")
@@ -29,6 +33,8 @@ class Space(BaseModel):
 
 
 class Booking(BaseModel):
+    """Booking object, holding all information about a single booking."""
+
     id: str
     user_id: str = Field(alias="userId")
     user_email: str = Field(alias="userEmail")
@@ -39,6 +45,8 @@ class Booking(BaseModel):
 
 
 class BookingCreateOrUpdateDTO(BaseModel):
+    """Booking object used only to create or update an existing booking."""
+
     enter: str
     leave: str
     space_id: str = Field(serialization_alias="spaceId")
