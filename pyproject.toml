@@ -1,8 +1,8 @@
 [project]
-name = "seatsurfing"
+name = "python-seatsurfing"
 version = "0.1.0"
 authors = [{ name = "Zoltán Fraknói" }]
-description = "Python module to interface with Seatsurfing"
+description = "Python client to interface with Seatsurfing"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -11,7 +11,7 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Vogete/seatsurfing-pysdk"
+"Homepage" = "https://github.com/Vogete/python-seatsurfing"
 
 [build-system]
 requires = ["setuptools", "wheel"]

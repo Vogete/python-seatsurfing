@@ -1,6 +1,6 @@
-# Seatsurfing Python
+# python-seatsurfing
 
-A Python client library to interact with the Seatsurfing API.
+A Python client and library to interact with the Seatsurfing API.
 
 > [!IMPORTANT]
 > The library is a work in progress, not all functionality is available yet, or finalized.
