@@ -6,7 +6,7 @@ on: push
 
 jobs:
   build:
-    if: github.ref_name == 'main'
+    if: github.ref_name == 'main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
             dist/**/*.tar.gz
 
   publish-testpypi:
-    if: github.ref_name == 'main'
+    if: github.ref_name == 'main' || startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-latest
     steps:
