@@ -1,13 +1,15 @@
 # python-seatsurfing
 
-A Python client and library to interact with the Seatsurfing API.
+A Python client and library to interact with the [Seatsurfing](https://github.com/seatsurfing/) API.
 
 > [!IMPORTANT]
 > The library is a work in progress, not all functionality is available yet, or finalized.
 
 ## Installation
 
-TBD
+```sh
+pip install python-seatsurfing
+```
 
 ## Usage
 
