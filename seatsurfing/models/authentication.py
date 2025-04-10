@@ -5,7 +5,8 @@ from pydantic import BaseModel, Field
 class PasswordLoginRequest(BaseModel):
     email: str
     password: str
-    long_lived: Optional[bool] = Field(alias="longLived", default=True)
+    long_lived: Optional[bool] = Field(serialization_alias="longLived", default=True)
+    organization_id: str = Field(serialization_alias="organizationId")
 
 
 class Jwt(BaseModel):
