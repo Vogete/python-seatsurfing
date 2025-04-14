@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 import httpx
 
 from seatsurfing.models.authentication import Jwt, PasswordLoginRequest
@@ -12,10 +13,10 @@ class SeatsurfingHttpClient:
     def __init__(
         self,
         base_url: str,
-        organization_id: str,
         *,
-        username: str = None,
-        password: str = None,
+        organization_id: Optional[str] = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
     ):
         self.__base_url = base_url
         self.__organization_id = organization_id
@@ -23,14 +24,14 @@ class SeatsurfingHttpClient:
         self.__client = httpx.Client(follow_redirects=True, base_url=base_url)
 
         # login if username/password provided.
-        if username and password:
-            self._password_login(username, password)
+        if organization_id and username and password:
+            self._password_login(username, password, organization_id)
 
     def __del__(self):
         self.__client.close()
 
     def _is_logged_in(self) -> bool:
-        "Check if the client is logged in."
+        "Check if the client is logged in. This should be used for autnenticated endpoints."
         # We can't check if it's actually a real URL, but we can check if it's empty at least.
         if not self.__base_url:
             return False
@@ -46,7 +47,7 @@ class SeatsurfingHttpClient:
     def _get(
         self, path: str, *, params: dict = None, headers: dict = None
     ) -> httpx.Response | None:
-        if not self._is_logged_in():
+        if not self.__base_url:
             return None
 
         r = self.__client.get(path, headers=headers, params=params)
@@ -56,7 +57,7 @@ class SeatsurfingHttpClient:
     def _post(
         self, path: str, *, data: dict = None, params: dict = None, headers: dict = None
     ) -> httpx.Response | None:
-        if not self._is_logged_in():
+        if not self.__base_url:
             return None
 
         r = self.__client.post(path, json=data, headers=headers, params=params)
@@ -66,7 +67,7 @@ class SeatsurfingHttpClient:
     def _put(
         self, path: str, *, data: dict = None, params: dict = None, headers: dict = None
     ) -> httpx.Response | None:
-        if not self._is_logged_in():
+        if not self.__base_url:
             return None
 
         r = self.__client.put(path, json=data, headers=headers, params=params)
@@ -76,18 +77,20 @@ class SeatsurfingHttpClient:
     def _delete(
         self, path: str, *, params: dict = None, headers: dict = None
     ) -> httpx.Response | None:
-        if not self._is_logged_in():
+        if not self.__base_url:
             return None
 
         r = self.__client.delete(path, headers=headers, params=params)
         r.raise_for_status()
         return r
 
-    def _password_login(self, username: str, password: str) -> Jwt:
+    def _password_login(
+        self, username: str, password: str, organization_id: str
+    ) -> Jwt:
         """Authenticate using username and password, and update class http client with new bearer token."""
         logger.debug(
             "Logging in to organization %s using username/password: %s | %s",
-            self.__organization_id,
+            organization_id,
             username,
             password,
         )
@@ -95,16 +98,14 @@ class SeatsurfingHttpClient:
         data = PasswordLoginRequest(
             email=username,
             password=password,
-            organization_id=self.__organization_id,
+            organization_id=organization_id,
         )
         print(data.model_dump())
 
-        url = f"{self.__base_url}/auth/login"
-        # We don't use the class' client because this is an unauthenticated endpoint.
-        r = httpx.post(
-            url=url, json=data.model_dump(by_alias=True), follow_redirects=True
+        r = self._post(
+            path="/auth/login",
+            data=data.model_dump(by_alias=True),
         )
-        r.raise_for_status()
         jwt = Jwt.model_validate(r.json())
 
         logger.debug("Successfully retrieved JWT: %s", jwt)
