@@ -100,7 +100,6 @@ class SeatsurfingHttpClient:
             password=password,
             organization_id=organization_id,
         )
-        print(data.model_dump())
 
         r = self._post(
             path="/auth/login",
