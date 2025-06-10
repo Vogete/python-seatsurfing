@@ -23,11 +23,15 @@ class Bookings(SeatsurfingHttpClient):
     def get_bookings(self):
         """Get all bookings as `list[Booking]`"""
         r = self._get("/booking/")
+        if not r:
+            return r
         return [Booking(**x) for x in r.json()]
 
     def get_booking(self, booking_id: str):
         """Get a single booking by ID. Returns a `Booking` object."""
         r = self._get(f"/booking/{booking_id}")
+        if not r:
+            return r
         return Booking(**(r.json()))
 
     def get_filtered_org_bookings(
@@ -40,7 +44,9 @@ class Bookings(SeatsurfingHttpClient):
             "start": self._convert_datetime_to_str(from_date),
             "end": self._convert_datetime_to_str(to_date),
         }
-        r = self._post("/booking/filter/", data=data)
+        r = self._get("/booking/filter/", params=data)
+        if not r:
+            return []
         return [Booking(**x) for x in r.json()]
 
     def create_booking(
