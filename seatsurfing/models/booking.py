@@ -42,6 +42,7 @@ class Booking(BaseModel):
     space_id: str = Field(alias="spaceId")
     enter: str
     leave: str
+    subject: Optional[str]
 
 
 class BookingCreateOrUpdateDTO(BaseModel):
@@ -50,4 +51,5 @@ class BookingCreateOrUpdateDTO(BaseModel):
     enter: str
     leave: str
     space_id: str = Field(serialization_alias="spaceId")
+    subject: str
     user_email: Optional[str] = Field(serialization_alias="userEmail", default="")

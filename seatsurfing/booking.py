@@ -54,6 +54,7 @@ class Bookings(SeatsurfingHttpClient):
         enter: datetime,
         leave: datetime,
         space_id: str,
+        subject: str,
         user_email: str = "",
     ):
         """
@@ -66,8 +67,9 @@ class Bookings(SeatsurfingHttpClient):
             leave=self._convert_datetime_to_str(leave),
             space_id=space_id,
             user_email=user_email,
+            subject=subject,
         )
-        self._post("/booking/", data=data.model_dump(by_alias=True))
+        self._post("/booking/", data=data.model_dump(by_alias=True, exclude_none=True))
 
     def update_booking(
         self,
