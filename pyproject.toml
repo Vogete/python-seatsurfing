@@ -1,6 +1,6 @@
 [project]
 name = "python-seatsurfing"
-version = "0.3.1"
+version = "0.4.1"
 authors = [{ name = "Zoltán Fraknói" }]
 description = "Python client to interface with Seatsurfing"
 readme = "README.md"
