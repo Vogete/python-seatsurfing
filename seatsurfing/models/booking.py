@@ -23,7 +23,7 @@ class Space(BaseModel):
     id: str
     available: bool
     location_id: str = Field(alias="locationId")
-    location: Location
+    location: Optional[Location] = None
     name: str
     x: int
     y: int
