@@ -1,6 +1,7 @@
 from typing import Optional
-from seatsurfing.booking import Bookings
 from seatsurfing.authentication import Authentication
+from seatsurfing.booking import Bookings
+from seatsurfing.space import Spaces
 
 
 class Client:
@@ -24,6 +25,13 @@ class Client:
 
         # Authenticated endpoints, require credentials to use them
         self.booking = Bookings(
+            base_url=self.base_url,
+            organization_id=self.organization_id,
+            username=self.username,
+            password=self.password,
+        )
+
+        self.spaces = Spaces(
             base_url=self.base_url,
             organization_id=self.organization_id,
             username=self.username,
@@ -55,6 +63,13 @@ class Client:
             raise ValueError("Password not set")
 
         self.booking = Bookings(
+            base_url=self.base_url,
+            organization_id=_organization_id,
+            username=_username,
+            password=_password,
+        )
+
+        self.spaces = Spaces(
             base_url=self.base_url,
             organization_id=_organization_id,
             username=_username,
